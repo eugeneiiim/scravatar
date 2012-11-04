@@ -1,8 +1,6 @@
 name := "scravatar"
 
-scalaVersion := "2.9.2"
-
-crossScalaVersions := Seq("2.9.1", "2.9.2")
+scalaVersion := "2.10.0-RC1"
 
 organization := "com.andersen-gott"
 
@@ -10,18 +8,17 @@ version := "1.1-SNAPSHOT"
 
 libraryDependencies ++=
   Seq(
-    "org.scalatest" %% "scalatest" % "1.7.1" % "test"
+    "org.scalatest" % "scalatest_2.10.0-M7" % "2.0.M4-2.10.0-M7-B1" % "test"
   )
 
 credentials += Credentials(Path.userHome / ".sbt" / "magott-credentials")
 
-useGpg:=true
-
-publishTo <<= (version) { version: String =>
-    if (version.trim.endsWith("SNAPSHOT"))
-      Some("Sonatype Nexus Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
-    else
-      Some("Sonatype Nexus Staging" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
+publishTo <<= version { (v: String) =>
+  val nexus = "http://mvn.compose.cc:8081/nexus/content/repositories"
+  if (v.trim.endsWith("SNAPSHOT"))
+    Some("Blend Snapshots (publish)" at nexus + "/snapshots/")
+  else
+    Some("Blend Releases"  at nexus + "/releases/")
 }
 
 seq(aetherPublishSettings: _*)
